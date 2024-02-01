@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { Link } from "react-router-dom";
 
-const Form = () => {
+const LoginForm = () => {
   const [error, setError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log(email);
-    console.log(password);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        console.log(user);
       })
       .catch((error) => {
         setError(true);
@@ -37,10 +37,11 @@ const Form = () => {
           required
         />
         <button type="submit">Login</button>
+        <Link to="/SignUp">Don't have an account yet?</Link>
         {error && <span>Wrong email or password!</span>}
       </form>
     </div>
   );
 };
 
-export default Form;
+export default LoginForm;

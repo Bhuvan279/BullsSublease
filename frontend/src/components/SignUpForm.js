@@ -2,10 +2,10 @@ import React, { useState, useRef } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 const SignUpForm = () => {
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
   //collect user email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,9 +44,9 @@ const SignUpForm = () => {
           emailRef.current.value = "";
           passwordRef.current.value = "";
           passwordCheckRef.current.value = "";
-          setEmail("");
-          setPassword("");
-          setPasswordCheck("");
+          navigate("/", {
+            state: { email: email },
+          });
         })
         .catch((error) => {
           setError("Something is not working, please try again");
@@ -71,7 +71,7 @@ const SignUpForm = () => {
           required
         />
         <input
-          type="text"
+          type="password"
           placeholder="Enter your password again"
           onChange={(e) => setPasswordCheck(e.target.value)}
           ref={passwordCheckRef}

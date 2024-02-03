@@ -12,16 +12,32 @@ app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
     const querySnapshot = await getDocs(collection(db, "rooms"));
-    const list = querySnapshot.docs.map((doc) => doc.data())
-    console.log(req.query)
-    const {q, maxPrice, minPrice} = req.query
+    let filteredProducts = querySnapshot.docs.map((doc) => doc.data())
+    
+    const {q, minPrice, maxPrice} = req.query
 
-    const search = (data, maxPrice = Number.MAX_VALUE, minPrice = Number.MIN_VALUE) => {
-        return data.filter((item) => 
-            item.address.toLowerCase().includes(q.toLowerCase()) && item.price >= minPrice
+    if (minPrice && maxPrice) {
+        filteredProducts = filteredProducts.filter(
+          (product) => parseFloat(product.price) >= parseFloat(minPrice) && parseFloat(product.price) <= parseFloat(maxPrice)
+        );
+    }else if(!minPrice && maxPrice) {
+        filteredProducts = filteredProducts.filter(
+            (product) => parseFloat(product.price) >= Number.MIN_VALUE && parseFloat(product.price) <= parseFloat(maxPrice)
+        );
+    }else if(minPrice && !maxPrice) {
+        filteredProducts = filteredProducts.filter(
+            (product) => parseFloat(product.price) >= parseFloat(minPrice) && parseFloat(product.price) <= Number.MAX_VALUE
         );
     }
-    res.json(search(list, maxPrice, minPrice))
+
+    if (q) {
+        filteredProducts = filteredProducts.filter(
+          (product) => product.address.toLowerCase().includes(q.toLowerCase())
+        );
+    }
+
+    res.json(filteredProducts)
+    
 })
 
 app.post('/addRoom', async (req, res) => {

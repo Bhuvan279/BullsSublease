@@ -27,20 +27,19 @@ const Navbar = () => {
   const [query, setQuery] = useState("")
   const [data, setData] = useState([])
   const [sidebar, setSidebar] = useState(false)
-  const [minPrice, setMinPrice] = useState("")
-  const [maxPrice, setMaxPrice] = useState("")
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
 
 
   const showSidebar = () => setSidebar(!sidebar);
 
   useEffect(() => {
     const fetchData = async () =>{
-      const res = await axios.get(`http://localhost:8383?q=${query}&maxPrice=${maxPrice}&minPrice=${minPrice}`)
+      const res = await axios.get(`http://localhost:8383?q=${query}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
       setData(res.data)
-      console.log(res.data)
     }
     fetchData()
-  }, [query, maxPrice, minPrice])
+  }, [query, minPrice, maxPrice])
 
   
   return (
@@ -57,8 +56,8 @@ const Navbar = () => {
             </div>
             <div className='navbar-toggle'>
               <Typography style={{fontFamily:"Outfit", color:"black"}}>PRICE RANGE: </Typography>
-              <InputBase placeholder='search...' onChange={e=>setMinPrice(e.target.value)} />
-              <InputBase placeholder='search...' onChange={e=>setMaxPrice(e.target.value)} />
+              <InputBase placeholder='min'  onChange={e=>setMinPrice(e.target.value)}/>
+              <InputBase placeholder='max'  onChange={e=>setMaxPrice(e.target.value)}/>
             </div>
           </ul>
         </nav>

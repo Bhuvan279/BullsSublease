@@ -8,7 +8,7 @@ const RoomCard = ({item}) => {
         component="img"
         alt="green iguana"
         height="140"
-        image="/static/images/cards/contemplative-reptile.jpg"
+        image={item.img}
         style={{borderRadius:"5px"}}
       />
       <CardContent>

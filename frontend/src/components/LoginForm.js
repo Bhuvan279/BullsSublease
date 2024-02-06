@@ -1,24 +1,28 @@
-import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 
 const LoginForm = () => {
   const [error, setError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+
+  const navitage = useNavigate();
+
+  const { dispatch } = useContext(AuthContext);
+
   const handleLogin = (e) => {
     e.preventDefault();
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
-        navigate("/", {
-          state: { email: email },
-        });
+        dispatch({ type: "LOGIN", payload: user });
+        navitage("/");
       })
       .catch((error) => {
         setError(true);
@@ -32,16 +36,14 @@ const LoginForm = () => {
           type="email"
           placeholder="email"
           onChange={(e) => setEmail(e.target.value)}
-          required
         />
         <input
           type="password"
           placeholder="password"
           onChange={(e) => setPassword(e.target.value)}
-          required
         />
         <button type="submit">Login</button>
-        <Link to="/SignUp">Don't have an account yet?</Link>
+        <Link to="/signup">Don't have an account ?</Link>
         {error && <span>Wrong email or password!</span>}
       </form>
     </div>

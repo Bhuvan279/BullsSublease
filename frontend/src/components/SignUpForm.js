@@ -1,9 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 const SignUpForm = () => {
+  const { dispatch } = useContext(AuthContext);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   //collect user email and password
@@ -39,6 +41,7 @@ const SignUpForm = () => {
           // Signed in
           const user = userCredential.user;
           console.log(user);
+          dispatch({ type: "LOGIN", payload: user });
 
           //reset the input text content and component state
           emailRef.current.value = "";
@@ -79,7 +82,6 @@ const SignUpForm = () => {
         />
         <button type="submit">Sign up</button>
         <Link to="/Login">Already have an account?</Link>
-
         {/* display error message */}
         {error && <span>{error}</span>}
       </form>

@@ -14,12 +14,17 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      localStorage.setItem("user", JSON.stringify(currentUser));
+      if (currentUser) {
+        dispatch({ type: "LOGIN", payload: currentUser }); // Dispatch LOGIN action if user is authenticated
+        localStorage.setItem("user", JSON.stringify(currentUser));
+      } else {
+        dispatch({ type: "LOGOUT", payload: null }); // Dispatch LOGOUT action if user is not authenticated
+        localStorage.removeItem("user");
+      }
     });
 
     return () => unsubscribe();
   }, []);
-
   return (
     <AuthContext.Provider value={{ currentUser: state.currentUser, dispatch }}>
       {children}

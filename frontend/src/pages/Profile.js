@@ -1,26 +1,30 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
-
+import { Navigate } from "react-router-dom";
+import { auth } from "../firebase";
 export default function Profile(props) {
   const { inputs } = props;
   const { currentUser, dispatch } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!currentUser) {
-      console.log("User not authenticated, redirecting...");
-    } else {
-      setLoading(false);
-    }
-  }, [currentUser]);
 
   const handleLogout = () => {
-    dispatch({ type: "LOGOUT", payload: null });
+    dispatch({ type: "LOGOUT" }); // Dispatch the logout action
+    auth
+      .signOut(currentUser)
+      .then(() => {
+        console.log("Logged out");
+        localStorage.removeItem("user");
+        dispatch({ type: "LOGOUT", payload: null });
+        <Navigate to="/login" />;
+      })
+      .catch((error) => {
+        console.log("There is an error");
+      });
+    // Clear user from local storage
   };
 
-  if (loading) {
+  if (!currentUser) {
     return <CircularProgress />;
   }
 

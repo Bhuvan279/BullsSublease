@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,8 @@ const SignUpForm = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   //collect user email and password
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -42,13 +44,20 @@ const SignUpForm = () => {
           const user = userCredential.user;
           console.log(user);
           dispatch({ type: "LOGIN", payload: user });
-
-          //reset the input text content and component state
-          emailRef.current.value = "";
-          passwordRef.current.value = "";
-          passwordCheckRef.current.value = "";
-          navigate("/", {
-            state: { email: email },
+          // Update profile after user is created
+          updateProfile(user, {
+            displayName: `${firstname} ${lastname}`,
+            email: email,
+          }).then(() => {
+            //reset the input text content and component state
+            setFirstname("");
+            setLastName("");
+            setEmail("");
+            setPassword("");
+            setPasswordCheck("");
+            navigate("/", {
+              state: { email: email },
+            });
           });
         })
         .catch((error) => {
@@ -56,9 +65,22 @@ const SignUpForm = () => {
         });
     }
   };
+
   return (
     <div className="login">
       <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          placeholder="Enter your first name"
+          onChange={(e) => setFirstname(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Enter your last name"
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
         <input
           type="email"
           placeholder="Enter your email"

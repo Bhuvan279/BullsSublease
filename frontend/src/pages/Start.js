@@ -1,15 +1,16 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 export default function Start() {
-  const location = useLocation();
-  const { email } = location.state || {};
+  const { currentUser } = useContext(AuthContext);
+  console.log(currentUser);
   return (
     <>
-      <h1>Welcome to BullsSublease!</h1>
+      <h1>Welcome to BullsSublease {currentUser.displayName}!</h1>
       <Link to="/Login">Sign in</Link>
       <Link to="/SignUp">Create account</Link>
-      {email && <p>Welcome {email}</p>}
+      <Link to="/Profile">Your Profile</Link>
     </>
   );
 }

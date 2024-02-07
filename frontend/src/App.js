@@ -6,6 +6,7 @@ import Signup from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
+import { Users } from "./user";
 function App() {
   const { currentUser } = useContext(AuthContext);
   const RequireAuth = ({ children }) => {
@@ -30,7 +31,7 @@ function App() {
             path="/profile"
             element={
               <RequireAuth>
-                <Profile />
+                <Profile inputs={Users} />
               </RequireAuth>
             }
           ></Route>

@@ -1,7 +1,7 @@
 import React from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
-
+import { Link } from "react-router-dom";
 export default function Profile(props) {
   const { inputs } = props;
   const { currentUser } = useContext(AuthContext);
@@ -19,6 +19,7 @@ export default function Profile(props) {
       >
         Log out
       </button>
+      <Link to="/">Home</Link>
       {inputs.map((input) => {
         return (
           <div className="demoAccount" key={`${input.first_name}-${input.id}`}>

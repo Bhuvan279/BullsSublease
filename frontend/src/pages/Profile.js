@@ -1,22 +1,33 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+
 export default function Profile(props) {
   const { inputs } = props;
-  const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
-  const { dispatch } = useContext(AuthContext);
+  const { currentUser, dispatch } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!currentUser) {
+      console.log("User not authenticated, redirecting...");
+    } else {
+      setLoading(false);
+    }
+  }, [currentUser]);
+
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT", payload: null });
+  };
+
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>
       <h1>Welcome {currentUser.displayName}</h1>
-      <button
-        type="button"
-        onClick={() => {
-          dispatch({ type: "LOGOUT", payload: null });
-        }}
-      >
+      <button type="button" onClick={handleLogout}>
         Log out
       </button>
       <Link to="/">Home</Link>

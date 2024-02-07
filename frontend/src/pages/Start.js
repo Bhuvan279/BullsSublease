@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+import Navbar from '../components/Navbar'
+import { Box } from '@mui/material';
 
 export default function Start() {
   const { currentUser } = useContext(AuthContext);
@@ -20,11 +22,11 @@ export default function Start() {
   }
 
   return (
-    <>
-      <h1>Welcome to BullsSublease {currentUser.displayName}!</h1>
-      <Link to="/login">Sign in</Link>
+    <Box>
+      {/* <Link to="/login">Sign in</Link>
       <Link to="/signup">Create account</Link>
-      <Link to="/profile">Your Profile</Link>
-    </>
+      <Link to="/profile">Your Profile</Link> */}
+      <Navbar/>
+    </Box>
   );
 }

@@ -19,6 +19,7 @@ import "../styles/Navbar.css";
 import { AuthContext } from "../contexts/AuthContext";
 import { auth } from "../firebase";
 import { Navigate } from "react-router-dom";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -132,6 +133,7 @@ const Navbar = () => {
                   onClick={handleLogout}
                 >
                   Logout
+                  <LogoutIcon/>
                 </Button>
                 <Button style={{ fontFamily: "Outfit", color: "black" }}>
                   Add Room

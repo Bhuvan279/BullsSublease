@@ -12,6 +12,7 @@ import {
   Grid,
   Link as MuiLink,
 } from "@mui/material";
+import '../styles/Signup.css'
 
 const SignUpForm = () => {
   const { dispatch } = useContext(AuthContext);
@@ -71,9 +72,9 @@ const SignUpForm = () => {
   };
 
   return (
-    <Container maxWidth="xs">
-      <div className="login">
-        <Typography variant="h5" align="center" gutterBottom>
+    <div className="container">
+      <div className="sign-up">
+        <Typography variant="h5" align="center" gutterBottom style={{ fontFamily: "Outfit", color: "black" }}>
           Sign Up
         </Typography>
         <form onSubmit={handleSignUp}>
@@ -132,12 +133,12 @@ const SignUpForm = () => {
               />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary">
+          <Button type="submit" fullWidth variant="contained" color="primary" style={{fontFamily: "Outfit", backgroundColor:"green"}}>
             Sign up
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <MuiLink component={Link} to="/login" variant="body2">
+              <MuiLink component={Link} to="/login" variant="body2" style={{fontFamily: "Outfit"}}>
                 Already have an account? Sign in
               </MuiLink>
             </Grid>
@@ -146,7 +147,7 @@ const SignUpForm = () => {
           {error && <Typography color="error">{error}</Typography>}
         </form>
       </div>
-    </Container>
+    </div>
   );
 };
 

@@ -13,6 +13,8 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 
+import '../styles/Login.css'
+
 const LoginForm = () => {
   const [error, setError] = useState(false);
   const [email, setEmail] = useState("");
@@ -38,17 +40,17 @@ const LoginForm = () => {
   };
 
   return (
-    <Container maxWidth="xs">
+    <div className="container">
       <div className="login">
-        <Typography variant="h5" align="center" gutterBottom>
+        <Typography variant="h5" align="center" gutterBottom style={{ fontFamily: "Outfit", color: "black" }}>
           Login
         </Typography>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="form">
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
-                fullWidth
+                fullWidth 
                 label="Email"
                 type="email"
                 value={email}
@@ -68,15 +70,17 @@ const LoginForm = () => {
               />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary">
+          <Grid>
+          <Button type="submit" fullWidth variant="contained" color="primary" style={{fontFamily: "Outfit", backgroundColor:"green"}}>
             Login
           </Button>
           <Grid container justifyContent="flex-end">
-            <Grid item>
-              <MuiLink component={Link} to="/signup" variant="body2">
+            <Grid item style={{marginTop: "5px"}}>
+              <MuiLink component={Link} to="/signup" variant="body2" style={{fontFamily: "Outfit"}}>
                 Don't have an account? Sign Up
               </MuiLink>
             </Grid>
+          </Grid>
           </Grid>
           {error && (
             <Typography variant="body2" color="error">
@@ -85,7 +89,7 @@ const LoginForm = () => {
           )}
         </form>
       </div>
-    </Container>
+    </div>
   );
 };
 

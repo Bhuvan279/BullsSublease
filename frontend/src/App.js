@@ -6,6 +6,8 @@ import Profile from "./pages/Profile";
 import { useContext } from "react";
 import { AuthContext } from "./contexts/AuthContext";
 import { Users } from "./user";
+import Addroom from "./pages/AddRoom"
+
 function App() {
   const { currentUser } = useContext(AuthContext);
   const RequireAuth = ({ children }) => {
@@ -31,6 +33,14 @@ function App() {
             element={
               <RequireAuth>
                 <Profile inputs={Users} />
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/addroom"
+            element={
+              <RequireAuth>
+                <Addroom />
               </RequireAuth>
             }
           ></Route>

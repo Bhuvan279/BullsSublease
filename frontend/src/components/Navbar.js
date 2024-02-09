@@ -14,12 +14,12 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import RoomCard from "./RoomCard";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import CloseIcon from "@mui/icons-material/Close";
 import "../styles/Navbar.css";
 import { AuthContext } from "../contexts/AuthContext";
 import { auth } from "../firebase";
 import { Navigate } from "react-router-dom";
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Link } from "react-router-dom";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -135,9 +135,9 @@ const Navbar = () => {
                   Logout
                   <LogoutIcon/>
                 </Button>
-                <Button style={{ fontFamily: "Outfit", color: "black" }}>
+                <Link to="/addroom"><Button style={{ fontFamily: "Outfit", color: "black" }}>
                   Add Room
-                </Button>
+                </Button></Link>
               </div>
             </ul>
           </nav>

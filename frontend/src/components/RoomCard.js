@@ -27,7 +27,7 @@ const RoomCard = ({item}) => {
         </CardContent>
         <CardContent  style={{display:"flex", flexDirection:"row", alignItems:"center", padding:"0"}}>
             <PlaceIcon/>
-            <Typography variant="h6" component="div" style={{fontFamily:"Outfit", color:"green"}}>{item.address}</Typography>
+            <Typography variant="h6" component="div" style={{fontFamily:"Outfit", color:"green"}}>{item.apartment}</Typography>
         </CardContent>
       </CardContent>
     </Card>

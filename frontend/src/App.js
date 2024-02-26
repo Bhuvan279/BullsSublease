@@ -8,6 +8,7 @@ import { AuthContext } from "./contexts/AuthContext";
 import { Users } from "./user";
 import Addroom from "./pages/AddRoom"
 import Maps from "./pages/Map"
+import UserProfile from "./pages/User/UserProfile";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -50,6 +51,14 @@ function App() {
             element={
               <RequireAuth>
                 <Maps />
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/user/:activePage"
+            element={
+              <RequireAuth>
+                <UserProfile />
               </RequireAuth>
             }
           ></Route>

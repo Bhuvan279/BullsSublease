@@ -80,17 +80,18 @@ function Addroom() {
     const handleSubmit = (e) => {
       e.preventDefault();
       const listing = { apartment, address, desc, price, from, to, img};
-
+      const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+      const uid = userFromLocalStorage ? userFromLocalStorage.uid : null;
       // setFile(URL.createObjectURL(e.target.files[0]));
-      fetch('http://localhost:8383/addRoom', {
+      fetch(`http://localhost:8383/addRoom/${uid}`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(listing)
       }).then(() => {
-        console.log('new blog added');
+        console.log('new room added');
         navigate('/')
       })
-
+      
     }
     if (!isLoaded)  return <div>Loading...</div>
     return (
@@ -138,12 +139,12 @@ function Addroom() {
           <label>Upload images of your apartment and room.</label>
           <input type="file" onChange={(e)=>setFile(e.target.files[0])} />
           <button>Add Posting</button>
-        </form>
-
-        
+        </form>      
       </div>
     );
 }
+
+
 const PlacesAutocomplete=({setAddress})=>{
   const {
     ready,

@@ -3,7 +3,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const app = express()
 const port = 8383
-const {collection, addDoc, getDocs, doc, getDoc} = require('firebase/firestore')
+const {collection, addDoc, getDocs, doc, getDoc, updateDoc} = require('firebase/firestore')
 
 const {db} = require('./firebase.js')
 
@@ -62,10 +62,44 @@ app.get('/room-desc/:roomID', async (req, res) => {
 })
 
 
-app.post('/addRoom', async (req, res) => {
+app.post('/addRoom/:userID', async (req, res) => {
+    const userID = req.params.userID;
     const docRef = await addDoc(collection(db, "rooms"), req.body);
-    console.log("Document written with ID: ", docRef.id);
-    res.send('Added!')
+    console.log("Room added for userID: ", userID);
+
+    const userDocRef = doc(db, "users", userID);
+    const userDoc = await getDoc(userDocRef);
+    const updatedRooms = [...userDoc.data().listings, docRef.id];
+    await updateDoc(userDocRef, { listings: updatedRooms });
+
+    res.send("Added")
 })
+
+app.get('/getSavedRooms/:userID', async (req, res) => {
+    const userID = req.params.userID;
+    const userDocRef = doc(db, "users", userID);
+    const userDoc = await getDoc(userDocRef);
+    res.send(userDoc.data().saved_rooms)
+})
+
+app.get('/saveRoom/:userID/:roomID', async (req, res) => {
+    const userID = req.params.userID;
+    const roomID = req.params.roomID;
+
+    const userDocRef = doc(db, "users", userID);
+    const userDoc = await getDoc(userDocRef);
+
+    let updatedSavedRooms = [];
+    const savedRooms = userDoc.data().saved_rooms
+    if(savedRooms.includes(roomID)){
+        updatedSavedRooms = savedRooms.filter(id => id !== roomID);
+    }else{
+        updatedSavedRooms = [...savedRooms, roomID];
+    }
+    await updateDoc(userDocRef, { saved_rooms: updatedSavedRooms });
+
+    res.send("Saved")
+})
+
 
 app.listen(port, () => console.log(`Server has started on port: ${port}`))

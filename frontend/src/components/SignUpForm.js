@@ -13,6 +13,8 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import '../styles/Signup.css'
+import {db} from '../firebase.js'
+import {collection, addDoc, getDocs, doc, getDoc, setDoc} from 'firebase/firestore'
 
 const SignUpForm = () => {
   const { dispatch } = useContext(AuthContext);
@@ -42,12 +44,13 @@ const SignUpForm = () => {
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    // Only create user if password is valid
+    let userID;
     if (validPassword()) {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
+          userID = user.uid;
           dispatch({ type: "LOGIN", payload: user });
           // Update profile after user is created
           updateProfile(user, {
@@ -55,11 +58,6 @@ const SignUpForm = () => {
             email: email,
           }).then(() => {
             // Reset the input text content and component state
-            setFirstname("");
-            setLastName("");
-            setEmail("");
-            setPassword("");
-            setPasswordCheck("");
             navigate("/", {
               state: { email: email },
             });
@@ -67,6 +65,8 @@ const SignUpForm = () => {
         })
         .catch((error) => {
           setError("Something is not working, please try again");
+        }).then(() => {
+          const docRef = setDoc(doc(db, "users", userID), {'firstname': firstname, 'lastname' : lastname , listings: [], saved_rooms:[]});
         });
     }
   };

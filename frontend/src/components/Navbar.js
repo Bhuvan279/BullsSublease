@@ -40,6 +40,7 @@ const Icons = styled(Box)(({ theme }) => ({
 const Navbar = () => {
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [savedRooms, setSavedRooms] = useState([]);
   const [sidebar, setSidebar] = useState(false);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -53,6 +54,18 @@ const Navbar = () => {
   const showProfileBar = () => setProfileBar(!profileBar);
 
   useEffect(() => {
+    const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+    const uid = userFromLocalStorage ? userFromLocalStorage.uid : null;
+    const getSavedRooms = async () => {
+      const res = await axios.get(
+        `http://localhost:8383/getSavedRooms/${uid}`
+      );
+      setSavedRooms(res.data)
+    }
+    getSavedRooms()
+  }, [])
+
+  useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get(
         `http://localhost:8383?q=${query}&minPrice=${minPrice}&maxPrice=${maxPrice}&from=${from}&to=${to}`
@@ -61,6 +74,8 @@ const Navbar = () => {
     };
     fetchData();
   }, [query, minPrice, maxPrice, from, to]);
+
+  
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" }); // Dispatch the logout action
     auth
@@ -146,9 +161,9 @@ const Navbar = () => {
           <nav className={profileBar ? "profile-menu active" : "profile-menu"}>
             <ul className="profile-menu-items">
               <div className="price-container">
-                <Typography style={{ fontFamily: "Outfit", color: "black" }}>
+                <Link to="/user/account-settings"><Button style={{ fontFamily: "Outfit", color: "black" }} >
                   {currentUser.displayName}
-                </Typography>
+                </Button></Link>
                 <Button
                   style={{ fontFamily: "Outfit", color: "black" }}
                   onClick={handleLogout}
@@ -172,7 +187,12 @@ const Navbar = () => {
         >
           {filteredData.map((item, index) => (
             <Grid item xs={12} sm={4} ms={4} key={index}>
-              <RoomCard item={item} />
+              {savedRooms.includes(item.id) ? (
+                <RoomCard item={item} saved={true}/>
+                ) : (
+                <RoomCard item={item} saved={false}/>          
+                )
+              }    
             </Grid>
           ))}
         </Grid>

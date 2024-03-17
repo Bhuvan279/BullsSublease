@@ -70,9 +70,11 @@ const Navbar = () => {
       const res = await axios.get(
         `http://localhost:8383?q=${query}&minPrice=${minPrice}&maxPrice=${maxPrice}&from=${from}&to=${to}`
       );
-      setFilteredData(res.data);
+      setFilteredData(res.data)
+
     };
     fetchData();
+    
   }, [query, minPrice, maxPrice, from, to]);
 
   
@@ -91,6 +93,7 @@ const Navbar = () => {
       });
     // Clear user from local storage
   };
+  
   return (
     <>
       <AppBar position="sticky" className="appbar">
@@ -185,7 +188,7 @@ const Navbar = () => {
           spacing={5}
           style={{ marginTop: "10px", marginBottom: "10px" }}
         >
-          {filteredData.map((item, index) => (
+          {filteredData && filteredData.map((item, index) => (
             <Grid item xs={12} sm={4} ms={4} key={index}>
               {savedRooms.includes(item.id) ? (
                 <RoomCard item={item} saved={true}/>

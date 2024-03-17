@@ -5,6 +5,10 @@ const app = express()
 const port = 8383
 const {collection, addDoc, getDocs, doc, getDoc, updateDoc} = require('firebase/firestore')
 const nodemailer = require("nodemailer")
+const path = require("path")
+
+
+
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -34,6 +38,8 @@ const { async } = require('@firebase/util');
 
 app.use(cors())
 app.use(bodyParser.json());
+
+
 
 app.get('/', async (req, res) => {
     const querySnapshot = await getDocs(collection(db, "rooms"));
@@ -131,7 +137,11 @@ app.get('/getSavedRooms/:userID', async (req, res) => {
     const userID = req.params.userID;
     const userDocRef = doc(db, "users", userID);
     const userDoc = await getDoc(userDocRef);
-    res.send(userDoc.data().saved_rooms)
+    if (userDoc.exists() && userDoc.data().saved_rooms){
+        res.send(userDoc.data().saved_rooms) 
+     }else{
+         res.status(200).send("Saved rooms not found")
+     }
 })
 
 app.get('/saveRoom/:userID/:roomID', async (req, res) => {
@@ -151,6 +161,20 @@ app.get('/saveRoom/:userID/:roomID', async (req, res) => {
     await updateDoc(userDocRef, { saved_rooms: updatedSavedRooms });
 
     res.send("Saved")
+})
+
+const _dirname = path.dirname(__filename)
+const buildPath = path.join(_dirname, "frontend/build")
+
+app.use(express.static(buildPath))
+
+app.get("/*", function(req, res){
+    res.sendFile(
+        path.join(_dirname, "frontend/build/index.html"),
+        function(err){
+            res.status(500).send(err)
+        }
+    )
 })
 
 

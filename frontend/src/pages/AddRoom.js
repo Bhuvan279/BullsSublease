@@ -17,14 +17,6 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete"
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopover,
-  ComboboxList,
-  ComboboxOption,
-} from "@reach/combobox";
-import "@reach/combobox/styles.css";
 import zIndex from "@mui/material/styles/zIndex";
 
 
@@ -161,21 +153,28 @@ const PlacesAutocomplete=({setAddress})=>{
     const {lat,lng} = await getLatLng(results[0])
     setAddress({address,lat,lng})
   }
-  return (<Combobox onSelect={handleSelect}>
-    <ComboboxInput value={value} 
-    onChange={(e)=>setValue(e.target.value)} 
-    disabled={!ready}
-    className="combobox-input"
-    placeholder="Enter address."
-    />
-    <ComboboxPopover className="pop">
-      <ComboboxList >
-        {status === "OK" && data.map(({place_id, description}) => (
-        <ComboboxOption key={place_id} value={description} />
-        ))}
-      </ComboboxList>
-    </ComboboxPopover>
-  </Combobox>)
+  return (
+    <div>
+      <input 
+        type="text" 
+        value={value} 
+        onChange={(e) => setValue(e.target.value)} 
+        disabled={!ready} 
+        className="combobox-input" 
+        placeholder="Enter address."
+      />
+      {status === "OK" && (
+        <ul className="pop">
+          {data.map(({ place_id, description }) => (
+            <li key={place_id} onClick={() => handleSelect(description)}>
+              {description}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+  
 } 
 
 export default Addroom;
